@@ -1,0 +1,21 @@
+{
+  "name": "Research KMS",
+  "short_name": "Research KMS",
+  "description": "文献管理、AI Agent 与 Markdown 知识库工作台",
+  "lang": "zh-CN",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#0b1220",
+  "categories": ["productivity", "education", "utilities"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "文献库", "short_name": "文献", "url": "/literature" },
+    { "name": "AI Studio", "short_name": "AI", "url": "/ai" },
+    { "name": "知识库", "short_name": "Vault", "url": "/vault" }
+  ]
+}

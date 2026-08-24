@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://research-kms.example/schemas/plugin-manifest-v1.json",
+  "title": "Research KMS plugin manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "name", "version", "publisher", "entryType", "permissions"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$", "maxLength": 100 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$" },
+    "publisher": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "hostRange": { "type": "string", "maxLength": 40 },
+    "entryType": { "enum": ["http-tool", "metadata-source", "exporter", "ui-link"] },
+    "permissions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["papers:read", "metadata:write", "vault:read", "vault:write", "network"] }
+    },
+    "allowedHosts": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 10,
+      "items": { "type": "string", "format": "hostname" }
+    },
+    "privacyUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "signature": { "type": "string", "minLength": 32 }
+  }
+}

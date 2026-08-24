@@ -1,0 +1,22 @@
+[package]
+name = "research-kms"
+version = "0.3.0"
+description = "Research KMS desktop and mobile client"
+authors = ["Research KMS contributors"]
+edition = "2021"
+
+[lib]
+name = "research_kms_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]

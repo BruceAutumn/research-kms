@@ -1,0 +1,44 @@
+# Backend
+backend/target/
+backend/*.jar
+backend/data/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/src-tauri/target/
+frontend/src-tauri/gen/android/local.properties
+website/node_modules/
+website/dist/
+website/.vinext/
+website/.wrangler/
+website/.next/
+
+# Signing material must never be committed
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.cer
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+*.env
+application-local.yml
+
+# Runtime secrets and user data
+*.key
+*.secret
+
+# Vault
+ResearchVault/
+.DS_Store

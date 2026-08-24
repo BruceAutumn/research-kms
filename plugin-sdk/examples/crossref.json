@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "org.crossref.metadata",
+  "name": "Crossref metadata",
+  "version": "1.0.0",
+  "publisher": "Research KMS contributors",
+  "hostRange": ">=0.2.0 <1.0.0",
+  "entryType": "metadata-source",
+  "permissions": ["papers:read", "metadata:write", "network"],
+  "allowedHosts": ["api.crossref.org"],
+  "privacyUrl": "https://www.crossref.org/privacy/",
+  "signature": "REPLACE_WITH_PUBLISHER_SIGNATURE_BEFORE_DISTRIBUTION"
+}

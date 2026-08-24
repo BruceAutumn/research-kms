@@ -1,0 +1,72 @@
+create table users (
+  id          bigserial primary key,
+  username    varchar(64) not null unique,
+  created_at  timestamptz not null default now()
+);
+
+create table papers (
+  id          bigserial primary key,
+  user_id     bigint not null references users(id),
+  title       varchar(512) not null,
+  authors     varchar(1024),
+  journal     varchar(256),
+  year        int,
+  doi         varchar(128),
+  abstract    text,
+  tags        text[]      not null default '{}',
+  pdf_path    varchar(512),
+  pdf_text    text,                    -- PDFBox 抽出的全文，供 AI 读取
+  created_at  timestamptz not null default now()
+);
+create index idx_papers_user on papers(user_id);
+
+-- 用户自定义 Metadata：一行一个字段
+-- 注意：这种 key-value 结构灵活但难做数值筛选（例如 Capacity > 200）。
+-- v1 先这样，代码里请留一句 TODO 注释说明将来可能迁到 jsonb。
+create table paper_metadata (
+  id        bigserial primary key,
+  paper_id  bigint not null references papers(id) on delete cascade,
+  key       varchar(128) not null,
+  value     text,
+  unique (paper_id, key)
+);
+
+create table notes (
+  id          bigserial primary key,
+  user_id     bigint not null references users(id),
+  title       varchar(512) not null,
+  content     text not null default '',
+  properties  jsonb not null default '{}',   -- Obsidian 风格 properties
+  paper_id    bigint references papers(id) on delete set null,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+create unique index idx_notes_user_title on notes(user_id, title);
+
+create table note_links (
+  id              bigserial primary key,
+  source_note_id  bigint not null references notes(id) on delete cascade,
+  target_title    varchar(512) not null,     -- 存标题而非 id，允许链向尚不存在的笔记
+  unique (source_note_id, target_title)
+);
+
+create table agents (
+  id          bigserial primary key,
+  user_id     bigint not null references users(id),
+  name        varchar(128) not null,
+  model       varchar(128),
+  prompt      text,
+  tools       text[] not null default '{}',
+  created_at  timestamptz not null default now()
+);
+
+create table app_settings (
+  id           bigserial primary key,
+  user_id      bigint not null unique references users(id),
+  provider     varchar(64),      -- openai / deepseek / qwen / claude / local
+  base_url     varchar(256),
+  model        varchar(128),
+  api_key      text
+);
+
+insert into users (username) values ('local');

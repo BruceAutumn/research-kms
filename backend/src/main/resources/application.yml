@@ -1,0 +1,60 @@
+server:
+  port: 8080
+
+spring:
+  mvc:
+    async:
+      request-timeout: 0
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/kms}
+    username: ${POSTGRES_USER:kms}
+    password: ${POSTGRES_PASSWORD:kms}
+  flyway:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+app:
+  # local | desktop | public. `public` is intentionally blocked until the
+  # multi-tenant release checklist in PUBLIC_RELEASE_READINESS.md is complete.
+  deployment-mode: ${APP_DEPLOYMENT_MODE:local}
+  storage:
+    pdf-dir: ${PDF_STORAGE_DIR:./data/pdfs}
+  llm:
+    mock: ${MOCK_LLM:false}
+    # 模型输出上限。原来硬编码 4096，长文总结经常被截在半句话上。
+    default-max-tokens: ${LLM_MAX_TOKENS:8192}
+  chat:
+    # Reader 对话注入论文正文的预算（字符）。
+    # 有检索结果时骨架让位给检索段落 —— 骨架管「全文长什么样」，检索段落管「这个问题的依据」。
+    skeleton-chars: ${CHAT_SKELETON_CHARS:24000}
+    skeleton-chars-with-retrieval: ${CHAT_SKELETON_CHARS_RETRIEVAL:10000}
+    retrieved-chars-max: ${CHAT_RETRIEVED_CHARS:12000}
+  embedding:
+    # 换模型必须同步改 V11 迁移里 embedding_chunk.embedding 的 vector(N) 维度，
+    # 只改这里会在插入时报维度不匹配。
+    #   bge-m3 -> 1024 / nomic-embed-text -> 768 / text-embedding-3-small -> 1536
+    dim: ${EMBED_DIM:1024}
+    # 单次 embed 请求的文本长度上限（字符）。超过直接拒绝而不是静默截断。
+    max-chars: ${EMBED_MAX_CHARS:8000}
+
+kms:
+  version: ${KMS_VERSION:0.0.1-SNAPSHOT}
+  vault:
+    # Vault Root：默认使用项目内数据目录；正式使用建议通过 VAULT_ROOT 指定绝对路径。
+    # 后端直接读写宿主机文件系统（无容器边界），
+    # 所有文件操作必须经 VaultPathResolver 的路径穿越校验。
+    root: ${VAULT_ROOT:./data/vault}
+    # 外部修改感知：macOS 无 inotify，JDK WatchService 退化为轮询且不递归，
+    # 这里采用可配置间隔的轮询扫描器（比较 mtime+size），默认 3000ms。
+    scan-interval-ms: ${VAULT_SCAN_INTERVAL_MS:3000}
