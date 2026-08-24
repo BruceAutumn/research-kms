@@ -3,7 +3,7 @@
   "version": "0.5.0",
   "releaseDate": "2026-08-24",
   "officialUrl": "https://research-kms-workspace.huangqiuhao672790.chatgpt.site",
-  "sourceCommit": "07d0705a930bacd340c621d569e8805b3e641c00",
+  "sourceCommit": "682c181ce2dff09f2d344bbe3de4f56e8d1233b9",
   "tests": {
     "spring": "75 passed",
     "hostedWeb": "8 passed",

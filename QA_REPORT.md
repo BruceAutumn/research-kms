@@ -1,7 +1,7 @@
 # Research KMS v0.5.0 public QA summary
 
 Release date: 2026-08-24  
-Reference source commit: `07d0705a930bacd340c621d569e8805b3e641c00`
+Reference source commit: `682c181ce2dff09f2d344bbe3de4f56e8d1233b9`
 
 ## Automated evidence
 
