@@ -6,12 +6,13 @@ This file separates features that work for a **local single-user installation** 
 
 | Channel | Current status | Safe use |
 | --- | --- | --- |
-| Local web / PWA | Ready for preview | One trusted user on a private machine/network |
-| Windows shell | Source + CI build | Connect only to an explicitly configured HTTPS backend |
-| Android shell | Source + CI build | Internal testing after APK signing; Play release needs AAB and Data safety review |
-| Public hosted SaaS | **Blocked** | Do not set `APP_DEPLOYMENT_MODE=public` yet |
+| Hosted Web product (`website/`) | Ready for public beta | SIWC identity, D1 tenant data, R2 files and encrypted BYOK |
+| Local web / PWA (`frontend/` + `backend/`) | Ready for local use | One trusted user on a private machine/network |
+| Windows shell | CI-built installer | Connects only to the configured HTTPS Web product |
+| Android shell | Signed APK for direct install | Play Store release still needs AAB and Data safety review |
+| Local Spring backend as public SaaS | **Blocked** | Keep `APP_DEPLOYMENT_MODE` private/local |
 
-The backend deliberately refuses to start in `public` mode. Remove that guard only after every P0 item below has an implementation and an integration test.
+The local Spring backend deliberately refuses to start in `public` mode. The hosted `website/` uses a separate tenant-aware architecture; do not remove the local-backend guard without completing its own P0 controls.
 
 ## P0 — blocks a public account service
 

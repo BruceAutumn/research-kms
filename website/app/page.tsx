@@ -40,7 +40,7 @@ export default function Home() {
             <h1>让文献、AI<br />与笔记，共用<br /><em>同一段思考。</em></h1>
             <p className="hero-lede">Research KMS 是一个本地优先的研究工作台——Zotero 式文献管理、可调工具的 AI，加上 Obsidian 式双链 Vault。</p>
             <div className="hero-actions">
-              <a className="button primary" href="/app">登录 / 注册并使用 <ArrowIcon /></a>
+              <a className="button primary" href="/login">登录 / 注册并使用 <ArrowIcon /></a>
               <a className="button ghost" href="/download">下载客户端</a>
             </div>
             <p className="microcopy">账户数据隔离 · 自带模型 API · 密钥服务端加密</p>
@@ -49,7 +49,7 @@ export default function Home() {
         </section>
 
         <section className="principles wrap" aria-label="Product principles">
-          <div><strong>BYOM</strong><span>DeepSeek 与 OpenAI-compatible</span></div>
+          <div><strong>BYOM</strong><span>中美主流模型与自定义 API</span></div>
           <div><strong>LOCAL-FIRST</strong><span>Markdown 和 PDF 由你控制</span></div>
           <div><strong>VISIBLE TOOLS</strong><span>工具过程可查看、可取消</span></div>
           <div><strong>PORTABLE</strong><span>Web · Windows · Android</span></div>
@@ -76,11 +76,11 @@ export default function Home() {
           <article className="model-card dark-card">
             <div className="kicker light">Model routing</div>
             <h2>你选模型，<br />工作区守边界。</h2>
-            <p>通过后端加密保存个人 API Key，配置 DeepSeek、OpenAI、OpenRouter 等 OpenAI-compatible 服务。客户端不携带任何预置密钥。</p>
+            <p>通过后端加密保存个人 API Key，连接 DeepSeek、Qwen、Kimi、GLM、Claude、OpenAI、Gemini、Grok 与兼容网关。客户端不携带任何预置密钥。</p>
             <div className="model-list">
               <div><StatusDot /><span>DeepSeek</span><small>OpenAI-compatible</small></div>
-              <div><StatusDot /><span>OpenRouter</span><small>OpenAI-compatible</small></div>
-              <div><StatusDot /><span>Custom HTTPS</span><small>OpenAI-compatible</small></div>
+              <div><StatusDot /><span>Claude / OpenAI / Gemini</span><small>Native & compatible</small></div>
+              <div><StatusDot /><span>Qwen / Kimi / GLM</span><small>OpenAI-compatible</small></div>
             </div>
           </article>
           <article className="release-card">
@@ -120,9 +120,9 @@ function WorkspaceArtwork() {
         <div className="workspace-main">
           <div className="paper-toolbar"><span>Attention Is All You Need.pdf</span><small>8 / 15</small></div>
           <div className="paper-sheet">
-            <small>3.2.2   SCALED DOT-PRODUCT ATTENTION</small>
+            <small>3.2.2 · SCALED DOT-PRODUCT ATTENTION</small>
             <h4>Attention is all you need</h4>
-            <p>We call our particular attention "Scaled Dot-Product Attention". The input consists of queries and keys…</p>
+            <p>We call our particular attention &ldquo;Scaled Dot-Product Attention&rdquo;. The input consists of queries and keys…</p>
             <div className="equation">Attention(Q, K, V) = softmax(QK<sup>T</sup> / √d<sub>k</sub>)V</div>
             <p className="highlight-line">The Transformer allows for significantly more parallelization and can reach a new state of the art.</p>
             <div className="annotation-pin">1</div>

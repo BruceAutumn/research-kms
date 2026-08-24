@@ -1,9 +1,10 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 import type { ReactNode } from "react";
-import { chatGPTSignInPath, getChatGPTUser } from "../chatgpt-auth";
+import { getChatGPTUser } from "../chatgpt-auth";
 
 export async function Shell({ children }: { children: ReactNode }) {
   const user = await getChatGPTUser();
-  return <><header className="site-header"><a className="brand" href="/" aria-label="Research KMS home"><span>R</span><b>Research KMS</b></a><nav aria-label="Main navigation"><a href="/#product">产品</a><a href="/app">Web 客户端</a><a href="/download">下载客户端</a></nav><a className="header-account" href={user ? "/app" : chatGPTSignInPath("/app")}>{user ? "打开工作区" : "登录 / 注册"} <ArrowIcon /></a></header>{children}<Footer /></>;
+  return <><header className="site-header"><a className="brand" href="/" aria-label="Research KMS home"><span>R</span><b>Research KMS</b></a><nav aria-label="Main navigation"><a href="/#product">产品</a><a href="/app">Web 客户端</a><a href="/download">下载客户端</a></nav><a className="header-account" href={user ? "/app" : "/login"}>{user ? "打开工作区" : "登录 / 注册"} <ArrowIcon /></a></header>{children}<Footer /></>;
 }
 
 export function Footer() {

@@ -8,6 +8,13 @@
       "when": 1787550525999,
       "tag": "0000_famous_junta",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1787554140370,
+      "tag": "0001_perpetual_maelstrom",
+      "breakpoints": true
     }
   ]
 }
