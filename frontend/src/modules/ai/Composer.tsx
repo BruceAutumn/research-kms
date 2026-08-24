@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Brain, Globe, MessageSquare, Paperclip, Plus, Send, Square, Wrench, X } from 'lucide-react';
+import { Brain, ClipboardList, Globe, MessageSquare, Paperclip, Plus, Send, Square, Wrench, X } from 'lucide-react';
 import ModelPicker from './ModelPicker';
 import type { LlmModel, AiAttachment } from '../../types';
 import { uploadAiAttachment } from '../../api/client';
@@ -7,7 +7,7 @@ import { uploadAiAttachment } from '../../api/client';
 type Effort = 'low' | 'medium' | 'high';
 
 interface Props {
-  mode: 'chat' | 'work';
+  mode: 'chat' | 'plan' | 'work';
   value: string;
   running: boolean;
   models: LlmModel[];
@@ -17,7 +17,7 @@ interface Props {
   webSearch: boolean;
   effort: Effort;
   attachments: AiAttachment[];
-  onMode: (mode: 'chat' | 'work') => void;
+  onMode: (mode: 'chat' | 'plan' | 'work') => void;
   onChange: (value: string) => void;
   onSend: () => void;
   onStop: () => void;
@@ -85,7 +85,7 @@ export default function Composer({
             if (!running) onSend();
           }
         }}
-        placeholder={mode === 'chat' ? '问一个科研问题…' : '让 Agent 执行一个工作流…'}
+        placeholder={mode === 'chat' ? '问一个科研问题…' : mode === 'plan' ? '描述目标；AI 只分析和规划，不执行写入…' : '让 Agent 执行一个工作流…'}
       />
       <div className="ai2-composer-bar">
         <button className="icon-btn" title="添加上下文" onClick={onAddContext}><Plus size={16} /></button>
@@ -95,6 +95,7 @@ export default function Composer({
         <input ref={fileInputRef} type="file" multiple accept=".txt,.md,.markdown,.json,.csv,.pdf,.png,.jpg,.jpeg" style={{ display: 'none' }} onChange={handleFileSelect} />
         <div className="ai2-segment">
           <button className={mode === 'chat' ? 'is-active' : ''} onClick={() => onMode('chat')}><MessageSquare size={14} />Chat</button>
+          <button className={mode === 'plan' ? 'is-active' : ''} onClick={() => onMode('plan')}><ClipboardList size={14} />Plan</button>
           <button className={mode === 'work' ? 'is-active' : ''} onClick={() => onMode('work')}><Wrench size={14} />Agent</button>
         </div>
         <button

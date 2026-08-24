@@ -1,4 +1,4 @@
-# Research KMS
+# Research KMS v0.5.0
 
 Research KMS 把文献管理、AI Chat/Agent 与双链知识库放进同一个研究工作区。
 
@@ -15,6 +15,7 @@ Research KMS 把文献管理、AI Chat/Agent 与双链知识库放进同一个�
 - `frontend/src-tauri/`：Windows / Android 最小权限客户端容器。
 - `plugin-sdk/`：声明式插件清单和权限模型草案。
 - `.github/workflows/`：质量检查及 Windows/Android 构建。
+- `openapi/openapi-v1.yaml`：Hosted 与 Spring 数据适配器共用的公开 `/api/v1` 契约。
 
 公开包不包含个人 API、数据库、PDF、Vault、日志、开发历史、部署凭据、签名证书或本机绝对路径。
 

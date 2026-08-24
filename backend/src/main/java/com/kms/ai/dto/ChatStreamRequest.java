@@ -6,6 +6,7 @@ import java.util.Map;
 public record ChatStreamRequest(
         Long conversationId,
         Long modelId,
+        String mode,
         List<ChatMessageDto> messages,
         List<Map<String, Object>> contextRefs,
         List<ChatAttachmentDto> attachments,

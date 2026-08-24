@@ -25,11 +25,12 @@ import {
 } from '../api/client';
 import type { Agent, AgentRun, AgentRunStep, AiConversation, AiAttachment } from '../types';
 import { consumeAiAction, listenAiAction, type AiAction, type AiContextRef } from './ai/AiStudioContext';
+import { PanelLeftOpen, PanelRightOpen } from 'lucide-react';
 
 export default function AiStudioModule() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [mode, setMode] = useState<'chat' | 'work'>('chat');
+  const [mode, setMode] = useState<'chat' | 'plan' | 'work'>('chat');
   const [input, setInput] = useState('');
   const [selectedAgentId, setSelectedAgentId] = useState<number>();
   const [selectedModelId, setSelectedModelId] = useState<number>();
@@ -45,6 +46,8 @@ export default function AiStudioModule() {
   const [webSearch, setWebSearch] = useState(false);
   const [effort, setEffort] = useState<'low' | 'medium' | 'high'>('medium');
   const [attachments, setAttachments] = useState<AiAttachment[]>([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [sideOpen, setSideOpen] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -114,7 +117,7 @@ export default function AiStudioModule() {
     if (!input.trim() || running) return;
     setError(null);
     setRunning(true);
-    if (mode === 'chat') await sendChat();
+    if (mode === 'chat' || mode === 'plan') await sendChat();
     else await sendWork();
   }
 
@@ -130,6 +133,7 @@ export default function AiStudioModule() {
     await postChatStream({
       conversationId: activeConversationId,
       modelId: selectedModelId,
+      mode,
       messages: [{ role: 'user', content: user.content }],
       contextRefs,
       attachments: sentAttachments,
@@ -244,13 +248,17 @@ export default function AiStudioModule() {
         onDeleteConversation={removeConversation}
         onNewChat={newChat}
         onSettings={() => { window.history.pushState({}, '', '/settings/models'); window.dispatchEvent(new PopStateEvent('popstate')); }}
+        open={historyOpen}
+        onClose={() => setHistoryOpen(false)}
       />
       <main className="ai2-main">
         <div className="ai2-topbar">
+          <button type="button" className="icon-btn ai2-drawer-toggle ai2-drawer-toggle-left" aria-label="展开会话栏" onClick={() => setHistoryOpen(true)}><PanelLeftOpen size={16} /></button>
           <span className="ai2-topbar-title">AI 对话</span>
-          <div className="ai2-tabs"><button className={mode === 'chat' ? 'is-active' : ''} onClick={() => setMode('chat')}>Chat</button><button className={mode === 'work' ? 'is-active' : ''} onClick={() => setMode('work')}>Agent</button></div>
+          <div className="ai2-tabs"><button className={mode === 'chat' ? 'is-active' : ''} onClick={() => setMode('chat')}>Chat</button><button className={mode === 'plan' ? 'is-active' : ''} onClick={() => setMode('plan')}>Plan</button><button className={mode === 'work' ? 'is-active' : ''} onClick={() => setMode('work')}>Agent</button></div>
+          <button type="button" className="icon-btn ai2-drawer-toggle ai2-drawer-toggle-right" aria-label="展开上下文栏" onClick={() => setSideOpen(true)}><PanelRightOpen size={16} /></button>
         </div>
-        {mode === 'chat'
+        {mode === 'chat' || mode === 'plan'
           ? (chatMessages.length === 0
               ? <AiHome conversations={conversations} onSelect={selectConversation} onPrompt={(text) => { setInput(text); }} />
               : <ChatPane messages={chatMessages} streaming={running} error={error} />)
@@ -300,6 +308,8 @@ export default function AiStudioModule() {
         onManageModels={() => { window.history.pushState({}, '', '/settings/models'); window.dispatchEvent(new PopStateEvent('popstate')); }}
         agentPrompt={agentsQuery.data?.find((a) => a.id === selectedAgentId)?.prompt}
         agentName={agentsQuery.data?.find((a) => a.id === selectedAgentId)?.name}
+        open={sideOpen}
+        onClose={() => setSideOpen(false)}
       />
     </div>
   );

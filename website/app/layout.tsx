@@ -2,9 +2,10 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./product.css";
 import "./product-fixes.css";
+import "./v050.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://example.com"),
+  metadataBase: new URL("https://research-kms-workspace.huangqiuhao672790.chatgpt.site"),
   title: { default: "Research KMS", template: "%s — Research KMS" },
   description: "本地优先的 AI 科研知识工作台。",
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },

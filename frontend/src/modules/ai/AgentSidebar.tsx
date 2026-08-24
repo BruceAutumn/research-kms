@@ -1,4 +1,4 @@
-import { History, Plus, Settings, Trash2 } from 'lucide-react';
+import { History, Plus, Settings, Trash2, X } from 'lucide-react';
 import type { AiConversation } from '../../types';
 
 interface Props {
@@ -8,6 +8,8 @@ interface Props {
   onDeleteConversation: (conversation: AiConversation) => void;
   onNewChat: () => void;
   onSettings: () => void;
+  open?: boolean;
+  onClose?: () => void;
 }
 
 export default function AgentSidebar({
@@ -16,10 +18,11 @@ export default function AgentSidebar({
   onSelectConversation,
   onDeleteConversation,
   onNewChat,
-  onSettings
+  onSettings, open = false, onClose
 }: Props) {
   return (
-    <aside className="ai2-sidebar">
+    <aside className={`ai2-sidebar ${open ? 'is-open' : ''}`}>
+      {onClose && <button type="button" className="icon-btn ai2-drawer-close" aria-label="收起会话栏" onClick={onClose}><X size={15} /></button>}
       <button className="btn btn-primary ai2-new" onClick={onNewChat}><Plus size={14} /> 新建对话</button>
       <div className="ai2-side-section">
         <div className="ai2-side-title">最近</div>

@@ -373,6 +373,10 @@ public class AiChatStreamService {
 
     private String buildFeaturePrompt(ChatStreamRequest request) {
         StringBuilder sb = new StringBuilder();
+        if ("plan".equalsIgnoreCase(request.mode())) {
+            sb.append("你处于 Plan 只读模式。只分析目标、列出编号步骤、风险、证据需求和验证方法。\n");
+            sb.append("禁止声称已经执行、修改、上传、删除、写入或调用工具；即使用户要求执行，也只给出执行计划。\n");
+        }
         if (Boolean.TRUE.equals(request.thinking())) {
             sb.append("请将你的深度思考过程放在 <thinking>...</thinking> 标签中，然后在标签外给出最终回答。\n");
             sb.append("思考过程应包含：问题分析、推理步骤、关键考量点。保持简洁但有深度。\n");

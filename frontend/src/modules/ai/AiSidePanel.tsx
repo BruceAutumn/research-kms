@@ -24,6 +24,8 @@ interface Props {
   onManageModels: () => void;
   agentPrompt?: string;
   agentName?: string;
+  open?: boolean;
+  onClose?: () => void;
 }
 
 function Card({
@@ -54,7 +56,7 @@ function Card({
 }
 
 export default function AiSidePanel({
-  contextRefs, onContextChange, models, modelId, onManageModels, agentPrompt, agentName
+  contextRefs, onContextChange, models, modelId, onManageModels, agentPrompt, agentName, open = false, onClose
 }: Props) {
   const [libraryFilter, setLibraryFilter] = useState('');
 
@@ -87,7 +89,8 @@ export default function AiSidePanel({
   }, [notesQuery.data, libraryFilter]);
 
   return (
-    <aside className="ai2-side">
+    <aside className={`ai2-side ${open ? 'is-open' : ''}`}>
+      {onClose && <button type="button" className="icon-btn ai2-drawer-close" aria-label="收起上下文栏" onClick={onClose}><X size={15} /></button>}
       {/* 指令：当前 Agent 的系统提示。对应 Claude Code 的 Instructions。 */}
       <Card
         title="指令"

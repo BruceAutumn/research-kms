@@ -39,10 +39,10 @@ jobs:
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/research-kms-release.jks"
           unsigned_apk=$(find frontend/src-tauri/gen/android/app/build/outputs -name '*-unsigned.apk' -print -quit)
           apksigner=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -1)
-          "$apksigner" sign --ks "$RUNNER_TEMP/research-kms-release.jks" --ks-key-alias researchkms --ks-pass env:ANDROID_STORE_PASSWORD --key-pass env:ANDROID_STORE_PASSWORD --out frontend/src-tauri/gen/android/app/build/outputs/Research-KMS-Android-v0.4.0.apk "$unsigned_apk"
-          "$apksigner" verify --verbose frontend/src-tauri/gen/android/app/build/outputs/Research-KMS-Android-v0.4.0.apk
+          "$apksigner" sign --ks "$RUNNER_TEMP/research-kms-release.jks" --ks-key-alias researchkms --ks-pass env:ANDROID_STORE_PASSWORD --key-pass env:ANDROID_STORE_PASSWORD --out frontend/src-tauri/gen/android/app/build/outputs/Research-KMS-Android-v0.5.0.apk "$unsigned_apk"
+          "$apksigner" verify --verbose frontend/src-tauri/gen/android/app/build/outputs/Research-KMS-Android-v0.5.0.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: research-kms-android-v0.4.0
-          path: frontend/src-tauri/gen/android/app/build/outputs/Research-KMS-Android-v0.4.0.apk
+          name: research-kms-android-v0.5.0
+          path: frontend/src-tauri/gen/android/app/build/outputs/Research-KMS-Android-v0.5.0.apk
           if-no-files-found: error

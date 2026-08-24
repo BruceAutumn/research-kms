@@ -1,11 +1,13 @@
 import { requireApiUser } from "../../../../lib/api-user";
 import { modelCompletion } from "../../../../lib/ai";
 import { assertSameOrigin, audit, HttpError, productEnv, routeError } from "../../../../lib/runtime";
+import { enforceRateLimit } from "../../../../lib/rate-limit";
 
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
     const user = await requireApiUser();
+    await enforceRateLimit(user.userId, "ai-chat", 60, 3600);
     const body = await request.json() as { prompt?: string; mode?: string; paperId?: number | null; noteId?: number | null };
     const prompt = body.prompt?.trim().slice(0, 12_000) || "";
     const mode = body.mode === "agent" ? "agent" : body.mode === "plan" ? "plan" : "chat";

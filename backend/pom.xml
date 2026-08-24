@@ -13,9 +13,9 @@
 
   <groupId>com.kms</groupId>
   <artifactId>research-kms</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.5.0</version>
   <name>research-kms</name>
-  <description>Personal research knowledge management system v1</description>
+  <description>Research KMS unified client backend v0.5.0</description>
 
   <properties>
     <java.version>21</java.version>

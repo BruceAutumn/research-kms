@@ -47,10 +47,23 @@ export class HttpError extends Error {
 
 export function routeError(error: unknown) {
   if (error instanceof HttpError) {
-    return Response.json({ error: error.message }, { status: error.status });
+    return Response.json({ error: error.message, code: statusCode(error.status), requestId: crypto.randomUUID() }, { status: error.status });
   }
-  const message = error instanceof Error ? error.message : "Unexpected error";
-  return Response.json({ error: message }, { status: 500 });
+  return Response.json({ error: "服务暂时不可用，请稍后重试。", code: "INTERNAL_ERROR", requestId: crypto.randomUUID() }, { status: 500 });
+}
+
+function statusCode(status: number) {
+  if (status === 400) return "BAD_REQUEST";
+  if (status === 401) return "UNAUTHENTICATED";
+  if (status === 403) return "FORBIDDEN";
+  if (status === 404) return "NOT_FOUND";
+  if (status === 405) return "METHOD_NOT_ALLOWED";
+  if (status === 409) return "REVISION_CONFLICT";
+  if (status === 413) return "PAYLOAD_TOO_LARGE";
+  if (status === 415) return "UNSUPPORTED_MEDIA_TYPE";
+  if (status === 429) return "RATE_LIMITED";
+  if (status === 502) return "UPSTREAM_ERROR";
+  return "REQUEST_FAILED";
 }
 
 export function asNumber(value: unknown): number | null {

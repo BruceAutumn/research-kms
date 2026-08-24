@@ -29,3 +29,13 @@ export async function POST(request: Request) {
     return Response.json({ providerName, baseUrl, model, protocol, hasApiKey: true, updatedAt: now });
   } catch (error) { return routeError(error); }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    assertSameOrigin(request);
+    const user = await requireApiUser();
+    await productEnv().DB.prepare("DELETE FROM llm_settings WHERE user_id=?").bind(user.userId).run();
+    await audit(user.userId, "model.settings.deleted", "personal API key removed");
+    return new Response(null, { status: 204 });
+  } catch (error) { return routeError(error); }
+}

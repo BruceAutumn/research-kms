@@ -1,5 +1,6 @@
 import { requireApiUser } from "../../../lib/api-user";
 import { assertSameOrigin, audit, HttpError, productEnv, routeError } from "../../../lib/runtime";
+import { indexEntity, removeIndexedEntity } from "../../../lib/search-index";
 
 export async function POST(request: Request) {
   try {
@@ -23,6 +24,7 @@ export async function POST(request: Request) {
         WHERE id=? AND paper_id=? AND user_id=?`).bind(page, type, color, text, comment, rects, now, body.id, paperId, user.userId).run();
       if (!result.meta.changes) throw new HttpError(404, "标注不存在。");
       await audit(user.userId, "annotation.updated", String(body.id));
+      await indexEntity(user.userId, "annotation", body.id, `PDF 标注 · p.${page}`, `${text}\n${comment}`);
       return Response.json({ id: body.id, paper_id: paperId, page, type, color, text, comment, rects_json: rects, updated_at: now });
     }
     const result = await productEnv().DB.prepare(`INSERT INTO annotations
@@ -30,6 +32,7 @@ export async function POST(request: Request) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
       .bind(user.userId, paperId, page, type, color, text, comment, rects, now, now).run();
     await audit(user.userId, "annotation.created", String(paperId));
+    await indexEntity(user.userId, "annotation", Number(result.meta.last_row_id), `PDF 标注 · p.${page}`, `${text}\n${comment}`);
     return Response.json({ id: result.meta.last_row_id, paper_id: paperId, page, type, color, text, comment, rects_json: rects, created_at: now, updated_at: now }, { status: 201 });
   } catch (error) { return routeError(error); }
 }
@@ -43,6 +46,7 @@ export async function DELETE(request: Request) {
     const result = await productEnv().DB.prepare("DELETE FROM annotations WHERE id = ? AND user_id = ?").bind(id, user.userId).run();
     if (!result.meta.changes) throw new HttpError(404, "标注不存在。");
     await audit(user.userId, "annotation.deleted", id);
+    await removeIndexedEntity(user.userId, "annotation", id);
     return new Response(null, { status: 204 });
   } catch (error) { return routeError(error); }
 }

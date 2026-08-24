@@ -1,6 +1,6 @@
 [package]
 name = "research-kms"
-version = "0.4.0"
+version = "0.5.0"
 description = "Research KMS desktop and mobile client"
 authors = ["Research KMS contributors"]
 edition = "2021"

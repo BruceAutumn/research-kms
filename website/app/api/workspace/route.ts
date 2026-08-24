@@ -7,15 +7,15 @@ export async function GET() {
     const db = productEnv().DB;
     const [papers, notes, settings, messages, annotations] = await Promise.all([
       db.prepare(`SELECT id, title, authors, year, doi, abstract_text, filename, size_bytes,
-        collection_name, tags, favorite, reading_progress, created_at, updated_at
+        collection_name, tags, favorite, reading_progress, revision, created_at, updated_at
         FROM papers WHERE user_id = ? ORDER BY created_at DESC LIMIT 200`).bind(user.userId).all(),
-      db.prepare(`SELECT id, title, content, folder, properties, pinned, created_at, updated_at
+      db.prepare(`SELECT id, stable_id, title, content, folder, properties, pinned, revision, created_at, updated_at
         FROM notes WHERE user_id = ? ORDER BY pinned DESC, updated_at DESC LIMIT 300`).bind(user.userId).all(),
       db.prepare(`SELECT provider_name, base_url, model, protocol, updated_at
         FROM llm_settings WHERE user_id = ?`).bind(user.userId).first(),
       db.prepare(`SELECT id, mode, role, content, created_at FROM ai_messages
         WHERE user_id = ? ORDER BY id DESC LIMIT 30`).bind(user.userId).all(),
-      db.prepare(`SELECT id, paper_id, page, type, color, text, comment, rects_json, created_at, updated_at
+      db.prepare(`SELECT id, paper_id, page, type, color, text, comment, rects_json, revision, created_at, updated_at
         FROM annotations WHERE user_id = ? ORDER BY page, id`).bind(user.userId).all(),
     ]);
     return Response.json({

@@ -1,0 +1,123 @@
+openapi: 3.1.0
+info:
+  title: Research KMS API
+  version: 0.5.0
+  description: Unified contract implemented by Hosted D1/R2 and the private Spring/PostgreSQL adapter.
+servers:
+  - url: https://research-kms-workspace.huangqiuhao672790.chatgpt.site/api/v1
+paths:
+  /search:
+    get:
+      summary: Search papers, PDF text, annotations, Vault notes and conversations
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema: { type: string, maxLength: 160 }
+      responses:
+        "200": { description: Search results }
+  /tools:
+    get:
+      summary: List actual registered Agent tools
+      responses:
+        "200": { description: Tool registry }
+  /agent-runs:
+    post:
+      summary: Create a resumable Agent run
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [prompt]
+              properties:
+                prompt: { type: string, maxLength: 12000 }
+                paperId: { type: [integer, "null"] }
+                noteId: { type: [integer, "null"] }
+      responses:
+        "201": { description: Run created }
+  /agent-runs/{id}/next:
+    post:
+      summary: Execute exactly one recoverable Agent decision or tool step
+      parameters: [{$ref: "#/components/parameters/RunId"}]
+      responses:
+        "200": { description: Updated run and steps }
+  /agent-runs/{id}/approve:
+    post:
+      summary: Approve once, approve for the run, or reject a pending write
+      parameters: [{$ref: "#/components/parameters/RunId"}]
+      responses:
+        "200": { description: Approval recorded }
+        "409": {$ref: "#/components/responses/Conflict"}
+  /agent-runs/{id}/cancel:
+    post:
+      summary: Cancel a run; no later step or write may commit
+      parameters: [{$ref: "#/components/parameters/RunId"}]
+      responses:
+        "200": { description: Run cancelled }
+  /agent-runs/{id}/resume:
+    post:
+      summary: Resume a paused or recoverable failed run
+      parameters: [{$ref: "#/components/parameters/RunId"}]
+      responses:
+        "200": { description: Run resumed }
+  /plugins:
+    get:
+      summary: List installed declarative plugins
+      responses:
+        "200": { description: Installed plugins }
+    post:
+      summary: Validate and install a JSON manifest
+      responses:
+        "201": { description: Plugin installed }
+    delete:
+      summary: Remove a plugin
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        "204": { description: Plugin removed }
+  /account/export:
+    post:
+      summary: Export account data without secrets
+      responses:
+        "200": { description: JSON export }
+  /account/delete:
+    post:
+      summary: Delete account product data after explicit confirmation
+      responses:
+        "200": { description: Deleted }
+  /account/sessions:
+    get:
+      summary: List product-visible sessions
+      responses:
+        "200": { description: Sessions }
+    delete:
+      summary: Request global sign-out through the identity provider
+      responses:
+        "200": { description: Sign-out URL }
+components:
+  parameters:
+    RunId:
+      in: path
+      name: id
+      required: true
+      schema: { type: string, format: uuid }
+  responses:
+    Conflict:
+      description: Optimistic concurrency or state conflict
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    Error:
+      type: object
+      required: [error, code, requestId]
+      properties:
+        error: { type: string }
+        code: { type: string }
+        requestId: { type: string, format: uuid }
