@@ -1,0 +1,56 @@
+server:
+  port: 8080
+
+spring:
+  mvc:
+    async:
+      request-timeout: 0
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/kms}
+    username: ${POSTGRES_USER:kms}
+    password: ${POSTGRES_PASSWORD:kms}
+  flyway:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+app:
+  storage:
+    pdf-dir: ${PDF_STORAGE_DIR:./data/pdfs}
+  llm:
+    mock: ${MOCK_LLM:false}
+    # Model output limit. Originally hardcoded 4096, Long summary often truncated mid-sentence. 
+    default-max-tokens: ${LLM_MAX_TOKENS:8192}
+  chat:
+    # Reader Budget for paper body in chat(char). 
+    # skeleton yields to resultsParagraph -- skeleton manage"What the full text looks like", retrieveParagraphmanage"basis of this question". 
+    skeleton-chars: ${CHAT_SKELETON_CHARS:24000}
+    skeleton-chars-with-retrieval: ${CHAT_SKELETON_CHARS_RETRIEVAL:10000}
+    retrieved-chars-max: ${CHAT_RETRIEVED_CHARS:12000}
+  embedding:
+    # Model change must sync V11 migrationin embedding_chunk.embedding   vector(N) Dimension, 
+    # Change here causes insert dimension mismatch. 
+    #   bge-m3 -> 1024 / nomic-embed-text -> 768 / text-embedding-3-small -> 1536
+    dim: ${EMBED_DIM:1024}
+    # Single embed Max text length of request(char). over directly rejectInstead ofsilent truncate. 
+    max-chars: ${EMBED_MAX_CHARS:8000}
+
+kms:
+  version: ${KMS_VERSION:0.0.1-SNAPSHOT}
+  vault:
+    # Vault Root: Host absolute path. Backend directly reads/writes host fs(No Container Boundary), 
+    # allFileoperationMustvia VaultPathResolver  Pathtraversal check. 
+    root: ${VAULT_ROOT:./data/vault}
+    # External change awareness: macOS no inotify, JDK WatchService Degrade to poll and non-recursive, 
+    # Use configurable interval poll scanner(Compare mtime+size), Default 3000ms. 
+    scan-interval-ms: ${VAULT_SCAN_INTERVAL_MS:3000}
