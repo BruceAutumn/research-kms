@@ -80,7 +80,7 @@ export default function Home() {
             <div className="model-list">
               <div><StatusDot /><span>DeepSeek</span><small>OpenAI-compatible</small></div>
               <div><StatusDot /><span>OpenRouter</span><small>OpenAI-compatible</small></div>
-              <div><StatusDot tone="quiet" /><span>Anthropic native</span><small>Roadmap</small></div>
+              <div><StatusDot /><span>Custom HTTPS</span><small>OpenAI-compatible</small></div>
             </div>
           </article>
           <article className="release-card">
